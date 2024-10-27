@@ -29,7 +29,7 @@ app.use((req, res, next) => {
     next();
   });
 
-app.use('/user/', userRouter);
-app.use('/expense/', expenseRouter);
+app.use('/uporabnik/', userRouter);
+app.use('/strosek/', expenseRouter);
 
 module.exports = app;

@@ -46,6 +46,22 @@ class Expense {
             throw new Error('Napaka pri pridobivanju stroska iz baze: ' + error.message);
         }
     }
+
+    static async izbrisi(id) {
+        try {
+            const strosekRef = db.collection("Potni_stroski").doc(id);
+            const response = await strosekRef.get();
+            const strosek = response.data();
+            if (strosek == undefined) {
+                throw new Error('Strosek ne obstaja');
+            }
+            await db.collection("Potni_stroski").doc(id).delete();
+
+            return { message: 'Strosek je bil izbrisan' };
+        } catch (error) {
+            throw new Error('Napaka pri brisanju stroska iz baze: ' + error.message);
+        }
+    }
 }
 
 module.exports = Expense;

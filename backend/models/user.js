@@ -49,6 +49,22 @@ class User {
             throw new Error('Napaka pri pridobivanju uporabnika iz baze: ' + error.message);
         }
     }
+
+    static async izbrisi(id) {
+        try {
+            const uporabnikRef = db.collection("Uporabniki").doc(id);
+            const response = await uporabnikRef.get();
+            const uporabnik = response.data();
+            if (uporabnik == undefined) {
+                throw new Error('Uporabnik ne obstaja');
+            }
+            await db.collection("Users").doc(id).delete();
+
+            return { message: 'Uporabnik je bil izbrisan' };
+        } catch (error) {
+            throw new Error('Napaka pri brisanju uporabnika iz baze: ' + error.message);
+        }
+    }
 }
 
 module.exports = User;

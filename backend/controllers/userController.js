@@ -46,8 +46,22 @@ async function najdiUporabnika(req, res) {
     }
 }
 
+async function izbrisiUporabnika(req, res) {
+    const { id } = req.params;
+    try {
+        const uporabnik = await User.izbrisi(id);
+        if (!uporabnik) {
+        return res.status(404).json({ error: 'Uporabnik ne obstaja' });
+        }
+        res.status(200).json({ message: 'Uporabnik uspešno izbrisan' });
+    } catch (error) {
+        res.status(500).json({ details: error.message });
+    }
+}
+
 module.exports = {
     dodajUporabnika,
     vsiUporabniki,
-    najdiUporabnika
+    najdiUporabnika,
+    izbrisiUporabnika
 }
