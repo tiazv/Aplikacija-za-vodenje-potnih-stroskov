@@ -42,8 +42,22 @@ async function najdiStrosek(req, res) {
     }
 }
 
+async function izbrisiStrosek(req, res) {
+    const { id } = req.params;
+    try {
+        const strosek = await User.izbrisi(id);
+        if (!strosek) {
+        return res.status(404).json({ error: 'Strosek ne obstaja' });
+        }
+        res.status(200).json({ message: 'Strosek uspešno izbrisan' });
+    } catch (error) {
+        res.status(500).json({ details: error.message });
+    }
+}
+
 module.exports = {
     dodajStrosek,
     vsiStroski,
-    najdiStrosek
+    najdiStrosek,
+    izbrisiStrosek
 }
