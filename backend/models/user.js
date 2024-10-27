@@ -2,11 +2,19 @@ const db = require("../db");
 const bcrypt = require("bcrypt");
 const { hashPassword } = require("../utils/hash_password");
 
+const UserType = {
+  DELAVEC: "delavec", // prijavlja stroske
+  UPORABNIK: "uporabnik", // gleda statistiko
+};
+
 class User {
   static async add(ime, priimek, email, geslo, tip) {
     try {
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(geslo, saltRounds);
+      if (!Object.values(UserType).includes(tip)) {
+        throw new Error("Neveljaven tip uporabnika");
+      }
+
+      const hashedPassword = await hashPassword(geslo);
 
       const id = email;
       const novUporabnik = {
@@ -105,4 +113,4 @@ class User {
   }
 }
 
-module.exports = { User };
+module.exports = { User, UserType };
