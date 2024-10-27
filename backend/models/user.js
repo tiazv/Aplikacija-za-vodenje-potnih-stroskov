@@ -102,7 +102,7 @@ class User {
       if (uporabnik == undefined) {
         throw new Error("Uporabnik ne obstaja");
       }
-      await db.collection("Users").doc(id).delete();
+      await db.collection("Uporabniki").doc(id).delete();
 
       return { message: "Uporabnik je bil izbrisan" };
     } catch (error) {
