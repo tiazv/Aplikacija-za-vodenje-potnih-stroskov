@@ -19,7 +19,35 @@ async function dodajUporabnika(req, res) {
       res.status(500).json({ details: error.message });
     }
 }
+  
+async function vsiUporabniki(req, res) {
+    try {
+        const uporabniki = await User.vsi();
+        res.status(200).json(uporabniki);
+    } catch (error) {
+        res.status(500).json({ details: error.message });
+    }
+}
+
+async function najdiUporabnika(req, res) {
+    const  { id } = req.params;
+    if (!id) {
+        return res.status(400).send({ error: 'Potreben je id' });
+    }
+
+    try {
+        const uporabnik = await User.getById(id);
+        if (!uporabnik) {
+        return res.status(404).json({ error: 'Uporabnik ne obstaja' });
+        }
+        res.status(200).json(uporabnik);
+    } catch (error) {
+        res.status(500).json({ details: error.message });
+    }
+}
 
 module.exports = {
-    dodajUporabnika
+    dodajUporabnika,
+    vsiUporabniki,
+    najdiUporabnika
 }
