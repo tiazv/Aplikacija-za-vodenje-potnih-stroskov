@@ -5,6 +5,7 @@ const expenseController = require('../controllers/expenseController');
 router.post('/dodaj', expenseController.dodajStrosek);
 router.get('/vsi', expenseController.vsiStroski);
 router.get('/:id', expenseController.najdiStrosek);
+router.put('/:id', expenseController.spremeniStrosek);
 router.delete('/:id', expenseController.izbrisiStrosek);
 
 module.exports = router;
