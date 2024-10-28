@@ -118,6 +118,23 @@ class Expense {
       throw new Error("Napaka pri brisanju stroska iz baze: " + error.message);
     }
   }
+
+  static async getByEmails(emails) {
+    try {
+      const stroskiRef = db.collection("Potni_stroski");
+      const response = await stroskiRef.where("oseba", "in", emails).get();
+      const stroski = [];
+      response.forEach((doc) => {
+        stroski.push(doc.data());
+      });
+
+      return stroski;
+    } catch (error) {
+      throw new Error(
+        "Napaka pri pridobivanju potnih stroškov iz baze: " + error.message
+      );
+    }
+  }
 }
 
 module.exports = Expense;

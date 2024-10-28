@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { User } = require("../models/user");
+const User = require("../models/user");
 
 async function dodajUporabnika(req, res) {
   const { ime, priimek, email, geslo, tip } = req.body;
