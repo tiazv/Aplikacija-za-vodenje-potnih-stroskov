@@ -1,5 +1,4 @@
 const db = require("../db");
-const bcrypt = require("bcrypt");
 const { hashPassword } = require("../utils/hash_password");
 
 const UserType = {
@@ -111,6 +110,27 @@ class User {
       );
     }
   }
+
+  static async getByFullName(ime, priimek) {
+    try {
+      const uporabnikiRef = db.collection("Uporabniki");
+      const query = uporabnikiRef
+        .where("ime", "==", ime)
+        .where("priimek", "==", priimek);
+
+      const response = await query.get();
+      const uporabniki = [];
+      response.forEach((doc) => {
+        uporabniki.push(doc.data());
+      });
+
+      return uporabniki;
+    } catch (error) {
+      throw new Error(
+        "Napaka pri pridobivanju oseb iz baze: " + error.message
+      );
+    }
+  }
 }
 
-module.exports = { User, UserType };
+module.exports = User;
