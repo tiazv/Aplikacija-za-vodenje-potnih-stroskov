@@ -41,9 +41,12 @@ class Expense {
     }
   }
 
-  static async getAll() {
+  static async getAll(limit, offset) {
     try {
-      const stroskiRef = db.collection("Potni_stroski");
+      const stroskiRef = db
+        .collection("Potni_stroski")
+        .limit(limit)
+        .offset(offset);
       const response = await stroskiRef.get();
       const stroski = [];
       response.forEach((doc) => {

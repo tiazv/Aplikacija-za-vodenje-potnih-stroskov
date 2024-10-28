@@ -1,4 +1,5 @@
 const Expense = require("../models/expense");
+const db = require("../db");
 
 async function dodajStrosek(req, res) {
   const { datum_odhoda, datum_prihoda, kilometrina, lokacija, opis, oseba } =
@@ -32,9 +33,21 @@ async function dodajStrosek(req, res) {
 }
 
 async function vsiStroski(req, res) {
+  const { page, limit } = req.query;
+  const limitValue = parseInt(limit);
+  const offsetValue = (parseInt(page) - 1) * limitValue;
+
   try {
-    const stroski = await Expense.getAll();
-    res.status(200).json(stroski);
+    const stroski = await Expense.getAll(limitValue, offsetValue);
+    const totalItems = (await db.collection("Potni_stroski").get()).size;
+
+    res.status(200).json({
+      currentPage: page,
+      itemsPerPage: limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limitValue),
+      data: stroski,
+    });
   } catch (error) {
     res.status(500).json({ details: error.message });
   }
