@@ -41,9 +41,12 @@ class Expense {
     }
   }
 
-  static async getAll() {
+  static async getAll(limit, offset) {
     try {
-      const stroskiRef = db.collection("Potni_stroski");
+      const stroskiRef = db
+        .collection("Potni_stroski")
+        .limit(limit)
+        .offset(offset);
       const response = await stroskiRef.get();
       const stroski = [];
       response.forEach((doc) => {
@@ -116,19 +119,36 @@ class Expense {
     }
   }
 
-  static async getByEmails(emails) {
+  static async getByEmails(emails, limit, page) {
     try {
-      const stroskiRef = db.collection("Potni_stroski");
-      const response = await stroskiRef.where("oseba", "in", emails).get();
-      const stroski = [];
-      response.forEach((doc) => {
-        stroski.push(doc.data());
-      });
+      let query = db.collection("Potni_stroski").where("oseba", "in", emails);
 
-      return stroski;
+      const totalSnapshot = await query.get();
+      const totalItems = totalSnapshot.size;
+
+      query = query.limit(limit);
+
+      if (page > 1) {
+        const previousPageSnapshot = await query
+          .limit((page - 1) * limit)
+          .get();
+        const lastDoc =
+          previousPageSnapshot.docs[previousPageSnapshot.docs.length - 1];
+        if (lastDoc) {
+          query = query.startAfter(lastDoc);
+        }
+      }
+
+      const paginatedSnapshot = await query.get();
+      const stroski = paginatedSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return { stroski, totalItems };
     } catch (error) {
       throw new Error(
-        "Napaka pri pridobivanju potnih stroškov iz baze: " + error.message
+        "Error retrieving expenses by emails with pagination: " + error.message
       );
     }
   }

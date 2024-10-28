@@ -1,5 +1,6 @@
 const Expense = require("../models/expense");
 const User = require("../models/user");
+const db = require("../db");
 
 async function dodajStrosek(req, res) {
   const { datum_odhoda, datum_prihoda, kilometrina, lokacija, opis, oseba } =
@@ -33,9 +34,21 @@ async function dodajStrosek(req, res) {
 }
 
 async function vsiStroski(req, res) {
+  const { page, limit } = req.query;
+  const limitValue = parseInt(limit);
+  const offsetValue = (parseInt(page) - 1) * limitValue;
+
   try {
-    const stroski = await Expense.getAll();
-    res.status(200).json(stroski);
+    const stroski = await Expense.getAll(limitValue, offsetValue);
+    const totalItems = (await db.collection("Potni_stroski").get()).size;
+
+    res.status(200).json({
+      currentPage: page,
+      itemsPerPage: limit,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limitValue),
+      data: stroski,
+    });
   } catch (error) {
     res.status(500).json({ details: error.message });
   }
@@ -88,7 +101,7 @@ async function izbrisiStrosek(req, res) {
 }
 
 async function stroskiPoOsebi(req, res) {
-  const { imePriimek } = req.query;
+  const { imePriimek, page = 1, limit = 10 } = req.query;
 
   if (!imePriimek || imePriimek.trim().split(" ").length < 2) {
     return res
@@ -97,8 +110,8 @@ async function stroskiPoOsebi(req, res) {
   }
 
   const [ime, priimek] = imePriimek.trim().split(" ");
-  console.log(ime);
-  console.log(priimek);
+  const limitValue = parseInt(limit);
+  const pageValue = parseInt(page);
 
   try {
     const uporabniki = await User.getByFullName(ime, priimek);
@@ -110,14 +123,24 @@ async function stroskiPoOsebi(req, res) {
 
     const emails = uporabniki.map((uporabnik) => uporabnik.email);
 
-    const stroski = await Expense.getByEmails(emails);
+    const { stroski, totalItems } = await Expense.getByEmails(
+      emails,
+      limitValue,
+      pageValue
+    );
     if (stroski.length === 0) {
       return res
         .status(404)
         .json({ error: "Delavec še nima prijavljenih potnih stroškov." });
     }
 
-    res.status(200).json(stroski);
+    res.status(200).json({
+      currentPage: pageValue,
+      itemsPerPage: limitValue,
+      totalItems,
+      totalPages: Math.ceil(totalItems / limitValue),
+      data: stroski,
+    });
   } catch (error) {
     res.status(500).json({ details: error.message });
   }
