@@ -1,4 +1,3 @@
-// components/CreateExpenseComponent.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -18,7 +17,6 @@ const CreateExpenseComponent: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setExpense({
       ...expense,
@@ -26,7 +24,6 @@ const CreateExpenseComponent: React.FC = () => {
     });
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null); 
@@ -74,7 +71,7 @@ const CreateExpenseComponent: React.FC = () => {
 
       <form onSubmit={handleSubmit}>
         <TextField
-          label="Datum Odhoda"
+          label="Datum odhoda"
           name="datum_odhoda"
           type="date"
           value={expense.datum_odhoda}
