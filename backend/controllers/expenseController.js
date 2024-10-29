@@ -40,6 +40,18 @@ async function vsiStroski(req, res) {
 
   try {
     const stroski = await Expense.getAll(limitValue, offsetValue);
+
+    const stroskiZOsebami = await Promise.all(
+      stroski.map(async (strosek) => {
+        const { ime, priimek } = await User.getByEmail(strosek.oseba);
+        strosekZOsebo = {
+          ...strosek,
+          oseba: ime + ' ' + priimek,
+        }
+        return strosekZOsebo;
+      })
+    );
+
     const totalItems = (await db.collection("Potni_stroski").get()).size;
 
     res.status(200).json({
@@ -47,7 +59,7 @@ async function vsiStroski(req, res) {
       itemsPerPage: limit,
       totalItems,
       totalPages: Math.ceil(totalItems / limitValue),
-      data: stroski,
+      data: stroskiZOsebami,
     });
   } catch (error) {
     res.status(500).json({ details: error.message });

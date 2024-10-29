@@ -86,9 +86,10 @@ const ExpenseListPage: React.FC = () => {
                   <TableCell>Datum odhoda</TableCell>
                   <TableCell>Datum prihoda</TableCell>
                   <TableCell>Kilometrina</TableCell>
+                  <TableCell>Strošek</TableCell>
                   <TableCell>Lokacija</TableCell>
                   <TableCell>Opis</TableCell>
-                  <TableCell>Oseba</TableCell>
+                  <TableCell>Delavec</TableCell>
                   <TableCell></TableCell>
                   <TableCell></TableCell>
                 </TableRow>
@@ -99,6 +100,7 @@ const ExpenseListPage: React.FC = () => {
                     <TableCell>{expense.datum_odhoda}</TableCell>
                     <TableCell>{expense.datum_prihoda}</TableCell>
                     <TableCell>{expense.kilometrina} km</TableCell>
+                    <TableCell>{expense.kilometrina}</TableCell> {/* Spremeni, ko bo dodan atribut */}
                     <TableCell>{expense.lokacija}</TableCell>
                     <TableCell>{expense.opis}</TableCell>
                     <TableCell>{expense.oseba}</TableCell>
