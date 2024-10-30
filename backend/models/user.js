@@ -126,9 +126,31 @@ class User {
 
       return uporabniki;
     } catch (error) {
-      throw new Error(
-        "Napaka pri pridobivanju oseb iz baze: " + error.message
-      );
+      throw new Error("Napaka pri pridobivanju oseb iz baze: " + error.message);
+    }
+  }
+
+  static async getByEmail(email) {
+    try {
+      const querySnapshot = await db
+        .collection("Uporabniki")
+        .where("email", "==", email)
+        .limit(1)
+        .get();
+
+      if (querySnapshot.empty) {
+        return null;
+      }
+
+      const userDoc = querySnapshot.docs[0];
+      const userData = userDoc.data();
+
+      return {
+        ime: userData.ime,
+        priimek: userData.priimek,
+      };
+    } catch (error) {
+      throw new Error("Napaka pri pridobivanju imen in priimkov iz baze: " + error.message);
     }
   }
 }
