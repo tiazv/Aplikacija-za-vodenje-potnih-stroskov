@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import { Container, TextField, Button, Typography } from '@mui/material';
+import { Container, Typography, TextField, Button, Box, Grid, Paper } from '@mui/material';
 import { IExpense } from '../models/expenses';
 
 const CreateExpenseComponent: React.FC = () => {
@@ -31,7 +31,7 @@ const CreateExpenseComponent: React.FC = () => {
 
     try {
       const response = await axios.post('http://localhost:9000/strosek/dodaj', expense);
-      setSuccessMessage('Expense added successfully!');
+      setSuccessMessage('Strošek je bil uspešno dodan!');
       console.log('Expense added:', response.data);
 
       setExpense({
@@ -45,88 +45,112 @@ const CreateExpenseComponent: React.FC = () => {
       });
     } catch (error: any) {
       setErrorMessage(
-        error.response?.data?.error || 'An error occurred while adding the expense'
+        error.response?.data?.error || 'Prišlo je do napake pri dodajanju stroška.'
       );
-      console.error('Error adding expense:', error);
+      console.error('Napaka pri dodajanju stroška:', error);
     }
   };
 
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h5" gutterBottom>
-        Dodaj nov strošek
-      </Typography>
-
-      {successMessage && (
-        <Typography variant="body1" color="primary" gutterBottom>
-          {successMessage}
+    <Container maxWidth="sm" sx={{ mt: 5 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h5" gutterBottom align="center">
+          Dodaj nov strošek
         </Typography>
-      )}
 
-      {errorMessage && (
-        <Typography variant="body1" color="error" gutterBottom>
-          {errorMessage}
-        </Typography>
-      )}
+        {successMessage && (
+          <Typography variant="body1" color="primary" gutterBottom align="center">
+            {successMessage}
+          </Typography>
+        )}
 
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Datum odhoda"
-          name="datum_odhoda"
-          type="date"
-          value={expense.datum_odhoda}
-          onChange={handleChange}
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          required
-        />
-        <TextField
-          label="Datum prihoda"
-          name="datum_prihoda"
-          type="date"
-          value={expense.datum_prihoda}
-          onChange={handleChange}
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          required
-        />
-        <TextField
-          label="Kilometrina"
-          name="kilometrina"
-          type="number"
-          value={expense.kilometrina}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <TextField
-          label="Lokacija"
-          name="lokacija"
-          value={expense.lokacija}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <TextField
-          label="Opis"
-          name="opis"
-          value={expense.opis}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <TextField
-          label="Oseba (email)"
-          name="oseba"
-          value={expense.oseba}
-          onChange={handleChange}
-          fullWidth
-          required
-        />
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          Dodaj strošek
-        </Button>
-      </form>
+        {errorMessage && (
+          <Typography variant="body1" color="error" gutterBottom align="center">
+            {errorMessage}
+          </Typography>
+        )}
+
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Datum odhoda"
+                name="datum_odhoda"
+                type="date"
+                value={expense.datum_odhoda}
+                onChange={handleChange}
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Datum prihoda"
+                name="datum_prihoda"
+                type="date"
+                value={expense.datum_prihoda}
+                onChange={handleChange}
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Kilometrina"
+                name="kilometrina"
+                type="number"
+                value={expense.kilometrina}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Lokacija"
+                name="lokacija"
+                value={expense.lokacija}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Opis"
+                name="opis"
+                value={expense.opis}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Oseba (email)"
+                name="oseba"
+                value={expense.oseba}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Dodaj strošek
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
     </Container>
   );
 };
