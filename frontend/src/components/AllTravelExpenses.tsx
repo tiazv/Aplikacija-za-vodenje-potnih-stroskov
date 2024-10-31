@@ -2,18 +2,23 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Typography,
   CircularProgress,
-  TablePagination,
+  Paper,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
   Button,
-} from "@mui/material";
+  TablePagination,
+  IconButton,
+  Box,
+} from '@mui/material';
+import detailsIcon from '../assets/more2.png';
+import editIcon from '../assets/edit2.png';
+import deleteIcon from '../assets/delete2.png';
 import { IExpense } from "../models/expenses";
 
 const ExpenseListPage: React.FC = () => {
@@ -68,75 +73,74 @@ const ExpenseListPage: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4" align="center" gutterBottom>
-        Traveling Expenses
-      </Typography>
-
-      {loading ? (
-        <CircularProgress />
-      ) : error ? (
-        <Typography color="error">{error}</Typography>
-      ) : (
-        <Paper>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Datum odhoda</TableCell>
-                  <TableCell>Datum prihoda</TableCell>
-                  <TableCell>Kilometrina</TableCell>
-                  <TableCell>Strošek</TableCell>
-                  <TableCell>Lokacija</TableCell>
-                  <TableCell>Opis</TableCell>
-                  <TableCell>Delavec</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {expenses.map((expense) => (
-                  <TableRow key={expense.id}>
-                    <TableCell>{expense.datum_odhoda}</TableCell>
-                    <TableCell>{expense.datum_prihoda}</TableCell>
-                    <TableCell>{expense.kilometrina} km</TableCell>
-                    <TableCell>{expense.kilometrina}</TableCell> {/* Spremeni, ko bo dodan atribut */}
-                    <TableCell>{expense.lokacija}</TableCell>
-                    <TableCell>{expense.opis}</TableCell>
-                    <TableCell>{expense.oseba}</TableCell>
-                    <TableCell>
-                      <Button> Podrobnosti </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button> Uredi </Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        color="error"
-                        onClick={() => handleDelete(expense.id)}
-                      >
-                        {" "}
-                        Izbriši{" "}
-                      </Button>
-                    </TableCell>
+      <Container maxWidth="lg" sx={{ mt: 5 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Traveling Expenses
+        </Typography>
+    
+        {loading ? (
+          <Box display="flex" justifyContent="center" my={3}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Typography color="error" align="center">
+            {error}
+          </Typography>
+        ) : (
+          <Paper elevation={3} sx={{ mt: 2 }}>
+            <TableContainer>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center"><strong>Datum odhoda</strong></TableCell>
+                    <TableCell align="center"><strong>Datum prihoda</strong></TableCell>
+                    <TableCell align="center"><strong>Kilometrina</strong></TableCell>
+                    <TableCell align="center"><strong>Lokacija</strong></TableCell>
+                    <TableCell align="center"><strong>Opis</strong></TableCell>
+                    <TableCell align="center"><strong>Delavec</strong></TableCell>
+                    <TableCell align="center" colSpan={3}><strong></strong></TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <TablePagination
-            component="div"
-            count={totalItems}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-      )}
-    </Container>
-  );
-};
-
+                </TableHead>
+                <TableBody>
+                  {expenses.map((expense) => (
+                    <TableRow key={expense.id} hover>
+                      <TableCell align="center">{expense.datum_odhoda}</TableCell>
+                      <TableCell align="center">{expense.datum_prihoda}</TableCell>
+                      <TableCell align="center">{expense.kilometrina} km</TableCell>
+                      <TableCell align="center">{expense.lokacija}</TableCell>
+                      <TableCell align="center">{expense.opis}</TableCell>
+                      <TableCell align="center">{expense.oseba}</TableCell>
+                      <TableCell align="center">
+                        <Button><img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button>
+                        <img src={editIcon} alt="Edit" width="24" height="24" />
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button onClick={() => handleDelete(expense.id)}>
+                        <img src={deleteIcon} alt="Delete" width="24" height="24" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+    
+            <TablePagination
+              component="div"
+              count={totalItems}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{ px: 2 }}
+            />
+          </Paper>
+        )}
+      </Container>
+    );
+  };
 export default ExpenseListPage;
