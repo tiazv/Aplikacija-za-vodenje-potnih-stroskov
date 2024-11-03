@@ -4,6 +4,7 @@
     "devStart": "nodemon server.js"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
@@ -12,6 +13,7 @@
     "express": "^4.21.1",
     "firebase": "^11.0.1",
     "firebase-admin": "^12.6.0",
+    "firebase-auth": "^0.1.2",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.7",
     "path": "^0.12.7"
