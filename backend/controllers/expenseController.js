@@ -3,10 +3,18 @@ const User = require("../models/user");
 const db = require("../db");
 
 async function dodajStrosek(req, res) {
-  const { datum_odhoda, datum_prihoda, kilometrina, lokacija, opis, oseba } =
-    req.body;
+  const {
+    naziv,
+    datum_odhoda,
+    datum_prihoda,
+    kilometrina,
+    lokacija,
+    opis,
+    oseba,
+  } = req.body;
 
   if (
+    !naziv ||
     !datum_odhoda ||
     !datum_prihoda ||
     !kilometrina ||
@@ -19,6 +27,7 @@ async function dodajStrosek(req, res) {
 
   try {
     const novStrosek = await Expense.add(
+      naziv,
       datum_odhoda,
       datum_prihoda,
       kilometrina,
@@ -46,8 +55,8 @@ async function vsiStroski(req, res) {
         const { ime, priimek } = await User.getByEmail(strosek.oseba);
         strosekZOsebo = {
           ...strosek,
-          oseba: ime + ' ' + priimek,
-        }
+          oseba: ime + " " + priimek,
+        };
         return strosekZOsebo;
       })
     );
