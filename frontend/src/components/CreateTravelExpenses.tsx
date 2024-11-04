@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
-import { Container, Typography, TextField, Button, Box, Grid, Paper } from '@mui/material';
-import { IExpense } from '../models/expenses';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Grid,
+  Paper,
+} from "@mui/material";
+import { IExpense } from "../models/expenses";
 
 const CreateExpenseComponent: React.FC = () => {
   const [expense, setExpense] = useState<IExpense>({
-    id: '',
-    datum_odhoda: '',
-    datum_prihoda: '',
+    id: "",
+    naziv: "",
+    datum_odhoda: "",
+    datum_prihoda: "",
     kilometrina: 0,
-    lokacija: '',
-    opis: '',
-    oseba: '',
+    lokacija: "",
+    opis: "",
+    oseba: "",
   });
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -26,28 +35,33 @@ const CreateExpenseComponent: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage(null); 
-    setSuccessMessage(null); 
+    setErrorMessage(null);
+    setSuccessMessage(null);
 
     try {
-      const response = await axios.post('http://localhost:9000/strosek/dodaj', expense);
-      setSuccessMessage('Strošek je bil uspešno dodan!');
-      console.log('Expense added:', response.data);
+      const response = await axios.post(
+        "http://localhost:9000/strosek/dodaj",
+        expense
+      );
+      setSuccessMessage("Strošek je bil uspešno dodan!");
+      console.log("Expense added:", response.data);
 
       setExpense({
-        id: '',
-        datum_odhoda: '',
-        datum_prihoda: '',
+        id: "",
+        naziv: "",
+        datum_odhoda: "",
+        datum_prihoda: "",
         kilometrina: 0,
-        lokacija: '',
-        opis: '',
-        oseba: '',
+        lokacija: "",
+        opis: "",
+        oseba: "",
       });
     } catch (error: any) {
       setErrorMessage(
-        error.response?.data?.error || 'Prišlo je do napake pri dodajanju stroška.'
+        error.response?.data?.error ||
+          "Prišlo je do napake pri dodajanju stroška."
       );
-      console.error('Napaka pri dodajanju stroška:', error);
+      console.error("Napaka pri dodajanju stroška:", error);
     }
   };
 
@@ -59,7 +73,12 @@ const CreateExpenseComponent: React.FC = () => {
         </Typography>
 
         {successMessage && (
-          <Typography variant="body1" color="primary" gutterBottom align="center">
+          <Typography
+            variant="body1"
+            color="primary"
+            gutterBottom
+            align="center"
+          >
             {successMessage}
           </Typography>
         )}
@@ -72,6 +91,17 @@ const CreateExpenseComponent: React.FC = () => {
 
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Naziv"
+                name="naziv"
+                value={expense.naziv}
+                onChange={handleChange}
+                fullWidth
+                required
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <TextField
                 label="Datum odhoda"
@@ -144,7 +174,12 @@ const CreateExpenseComponent: React.FC = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary" fullWidth>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
                 Dodaj strošek
               </Button>
             </Grid>
