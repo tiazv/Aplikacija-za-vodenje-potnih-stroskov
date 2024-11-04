@@ -1,6 +1,6 @@
 import { IUser } from "./user";
 
-export interface IExpense{
+export interface IAddExpense{
     id: string;
     naziv: string;
     datum_odhoda: string;
@@ -9,5 +9,4 @@ export interface IExpense{
     lokacija: string;
     opis: string;
     oseba: string;
-    cena: number;
 }

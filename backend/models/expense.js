@@ -11,27 +11,22 @@ class Expense {
     oseba
   ) {
     try {
+      const date = new Date().toJSON();
       const id =
         oseba +
         "_" +
-        datum_odhoda
-          .replace(/\s+/g, "")
-          .replace(/[^a-zA-Z0-9]/g, "")
-          .toLowerCase() +
-        "_" +
-        datum_prihoda
-          .replace(/\s+/g, "")
-          .replace(/[^a-zA-Z0-9]/g, "")
-          .toLowerCase();
+        date;
+      const cena = kilometrina * 0.43;
       const novStrosek = {
-        id,
-        naziv,
-        datum_odhoda, // "2024-10-27"
-        datum_prihoda, // "2024-10-27"
-        kilometrina,
-        lokacija,
-        opis,
-        oseba, // email referenca na userja
+        id: id,
+        naziv: naziv,
+        datum_odhoda: datum_odhoda, // "2024-10-27"
+        datum_prihoda: datum_prihoda, // "2024-10-27"
+        kilometrina: kilometrina,
+        lokacija: lokacija,
+        opis: opis,
+        oseba: oseba, // email referenca na userja
+        cena: cena.toFixed(2),
       };
 
       db.collection("Potni_stroski").doc(id).set(novStrosek);
