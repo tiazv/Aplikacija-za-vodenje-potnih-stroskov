@@ -10,10 +10,10 @@ import {
   Grid,
   Paper,
 } from "@mui/material";
-import { IExpense } from "../models/expenses";
+import { IAddExpense } from "../models/addExpenses";
 
 const CreateExpenseComponent: React.FC = () => {
-  const [expense, setExpense] = useState<IExpense>({
+  const [expense, setExpense] = useState<IAddExpense>({
     id: "",
     naziv: "",
     datum_odhoda: "",
