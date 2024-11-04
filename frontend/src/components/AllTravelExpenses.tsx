@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -28,6 +29,7 @@ const ExpenseListPage: React.FC = () => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -72,6 +74,14 @@ const ExpenseListPage: React.FC = () => {
     setPage(0);
   };
 
+  const handleEdit = (id: string) => {
+    navigate(`/edit/${id}`);  // Navigate to edit page with expense id
+  };
+
+  const handleDetails = (id: string) => {
+    navigate(`/details/${id}`);  // Navigate to edit page with expense id
+  };
+
   return (
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         <Typography variant="h4" align="center" gutterBottom>
@@ -111,11 +121,12 @@ const ExpenseListPage: React.FC = () => {
                       <TableCell align="center">{expense.opis}</TableCell>
                       <TableCell align="center">{expense.oseba}</TableCell>
                       <TableCell align="center">
-                        <Button><img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
+                        <Button onClick={() => handleDetails(expense.id)}>
+                          <img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Button>
-                        <img src={editIcon} alt="Edit" width="24" height="24" />
+                        <Button onClick={() => handleEdit(expense.id)}>  {/* Edit button */}
+                          <img src={editIcon} alt="Edit" width="24" height="24" />
                         </Button>
                       </TableCell>
                       <TableCell align="center">
