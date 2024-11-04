@@ -38,6 +38,11 @@ const CreateExpenseComponent: React.FC = () => {
     const formErrors: { [key: string]: string } = {};
     let formIsValid = true;
 
+    if (!expense.naziv) {
+      formIsValid = false;
+      formErrors['naziv'] = 'Prosimo, vnesite naziv potnega stroška.';
+    }
+
     if (!expense.datum_odhoda) {
       formIsValid = false;
       formErrors['datum_odhoda'] = 'Prosimo, vnesite datum odhoda.';
@@ -157,7 +162,8 @@ const CreateExpenseComponent: React.FC = () => {
                 value={expense.naziv}
                 onChange={handleChange}
                 fullWidth
-                required
+                error={!!errors['naziv']}
+                helperText={errors['naziv']}
               />
             </Grid>
 
