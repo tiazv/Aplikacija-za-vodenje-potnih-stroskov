@@ -25,6 +25,7 @@ const CreateExpenseComponent: React.FC = () => {
   });
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setExpense({
@@ -33,10 +34,68 @@ const CreateExpenseComponent: React.FC = () => {
     });
   };
 
+  const validateExpenseForm = () => {
+    const formErrors: { [key: string]: string } = {};
+    let formIsValid = true;
+
+    if (!expense.datum_odhoda) {
+      formIsValid = false;
+      formErrors['datum_odhoda'] = 'Prosimo, vnesite datum odhoda.';
+    }
+
+    if (!expense.datum_prihoda) {
+      formIsValid = false;
+      formErrors['datum_prihoda'] = 'Prosimo, vnesite datum prihoda.';
+    }
+
+    if (expense.datum_odhoda && expense.datum_prihoda) {
+      const datumOdhoda = new Date(expense.datum_odhoda);
+      const datumPrihoda = new Date(expense.datum_prihoda);
+
+      if (datumPrihoda <= datumOdhoda) {
+        formIsValid = false;
+        formErrors['datum_prihoda'] = 'Datum prihoda mora biti po datumu odhoda.';
+      }
+    }
+
+    if (expense.kilometrina <= 0) {
+      formIsValid = false;
+      formErrors['kilometrina'] = 'Kilometrina mora biti večja od 0.';
+    }
+
+    if (!expense.lokacija) {
+      formIsValid = false;
+      formErrors['lokacija'] = 'Prosimo, vnesite lokacijo.';
+    }
+
+    if (!expense.opis) {
+      formIsValid = false;
+      formErrors['opis'] = 'Prosimo, vnesite opis.';
+    }
+
+    if (!expense.oseba) {
+      formIsValid = false;
+      formErrors['oseba'] = 'Prosimo, vnesite email osebe.';
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(expense.oseba)) {
+        formIsValid = false;
+        formErrors['oseba'] = 'Vnesite veljaven email naslov.';
+      }
+    }
+
+    setErrors(formErrors);
+    return formIsValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setSuccessMessage(null);
+
+    if (!validateExpenseForm()) {
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -111,7 +170,8 @@ const CreateExpenseComponent: React.FC = () => {
                 onChange={handleChange}
                 fullWidth
                 InputLabelProps={{ shrink: true }}
-                required
+                error={!!errors['datum_odhoda']}
+                helperText={errors['datum_odhoda']}
               />
             </Grid>
 
@@ -124,7 +184,8 @@ const CreateExpenseComponent: React.FC = () => {
                 onChange={handleChange}
                 fullWidth
                 InputLabelProps={{ shrink: true }}
-                required
+                error={!!errors['datum_prihoda']}
+                helperText={errors['datum_prihoda']}
               />
             </Grid>
 
@@ -136,7 +197,8 @@ const CreateExpenseComponent: React.FC = () => {
                 value={expense.kilometrina}
                 onChange={handleChange}
                 fullWidth
-                required
+                error={!!errors['kilometrina']}
+                helperText={errors['kilometrina']}
               />
             </Grid>
 
@@ -147,7 +209,8 @@ const CreateExpenseComponent: React.FC = () => {
                 value={expense.lokacija}
                 onChange={handleChange}
                 fullWidth
-                required
+                error={!!errors['lokacija']}
+                helperText={errors['lokacija']}
               />
             </Grid>
 
@@ -158,7 +221,8 @@ const CreateExpenseComponent: React.FC = () => {
                 value={expense.opis}
                 onChange={handleChange}
                 fullWidth
-                required
+                error={!!errors['opis']}
+                helperText={errors['opis']}
               />
             </Grid>
 
@@ -169,7 +233,8 @@ const CreateExpenseComponent: React.FC = () => {
                 value={expense.oseba}
                 onChange={handleChange}
                 fullWidth
-                required
+                error={!!errors['oseba']}
+                helperText={errors['oseba']}
               />
             </Grid>
 
