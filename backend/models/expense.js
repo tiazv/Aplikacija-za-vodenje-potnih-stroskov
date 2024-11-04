@@ -11,11 +11,18 @@ class Expense {
     oseba
   ) {
     try {
-      let date = new Date().toJSON();
       const id =
         oseba +
         "_" +
-        date;
+        datum_odhoda
+          .replace(/\s+/g, "")
+          .replace(/[^a-zA-Z0-9]/g, "")
+          .toLowerCase() +
+        "_" +
+        datum_prihoda
+          .replace(/\s+/g, "")
+          .replace(/[^a-zA-Z0-9]/g, "")
+          .toLowerCase();
       const cena = kilometrina * 0.43;
       const novStrosek = {
         id: id,
@@ -26,7 +33,7 @@ class Expense {
         lokacija: lokacija,
         opis: opis,
         oseba: oseba, // email referenca na userja
-        cena: cena.toFixed(2),
+        cena: cena,
       };
 
       db.collection("Potni_stroski").doc(id).set(novStrosek);
