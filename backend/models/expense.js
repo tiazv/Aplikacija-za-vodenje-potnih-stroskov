@@ -2,6 +2,7 @@ const db = require("../db");
 
 class Expense {
   static async add(
+    naziv,
     datum_odhoda,
     datum_prihoda,
     kilometrina,
@@ -25,6 +26,7 @@ class Expense {
       const cena = kilometrina * 0.43;
       const novStrosek = {
         id: id,
+        naziv: naziv,
         datum_odhoda: datum_odhoda, // "2024-10-27"
         datum_prihoda: datum_prihoda, // "2024-10-27"
         kilometrina: kilometrina,

@@ -94,9 +94,7 @@ const ExpenseListPage: React.FC = () => {
                   <TableRow>
                     <TableCell align="center"><strong>Datum odhoda</strong></TableCell>
                     <TableCell align="center"><strong>Datum prihoda</strong></TableCell>
-                    <TableCell align="center"><strong>Kilometrina</strong></TableCell>
-                    <TableCell align="center"><strong>Lokacija</strong></TableCell>
-                    <TableCell align="center"><strong>Opis</strong></TableCell>
+                    <TableCell align="center"><strong>Naziv</strong></TableCell>
                     <TableCell align="center"><strong>Delavec</strong></TableCell>
                     <TableCell align="center" colSpan={3}><strong></strong></TableCell>
                   </TableRow>
@@ -106,9 +104,7 @@ const ExpenseListPage: React.FC = () => {
                     <TableRow key={expense.id} hover>
                       <TableCell align="center">{expense.datum_odhoda}</TableCell>
                       <TableCell align="center">{expense.datum_prihoda}</TableCell>
-                      <TableCell align="center">{expense.kilometrina} km</TableCell>
-                      <TableCell align="center">{expense.lokacija}</TableCell>
-                      <TableCell align="center">{expense.opis}</TableCell>
+                      <TableCell align="center">{expense.naziv}</TableCell>
                       <TableCell align="center">{expense.oseba}</TableCell>
                       <TableCell align="center">
                         <Button><img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
