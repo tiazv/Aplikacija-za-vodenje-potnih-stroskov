@@ -2,6 +2,7 @@ const db = require("../db");
 
 class Expense {
   static async add(
+    naziv,
     datum_odhoda,
     datum_prihoda,
     kilometrina,
@@ -23,13 +24,14 @@ class Expense {
           .replace(/[^a-zA-Z0-9]/g, "")
           .toLowerCase();
       const novStrosek = {
-        id: id,
-        datum_odhoda: datum_odhoda, // "2024-10-27"
-        datum_prihoda: datum_prihoda, // "2024-10-27"
-        kilometrina: kilometrina,
-        lokacija: lokacija,
-        opis: opis,
-        oseba: oseba, // email referenca na userja
+        id,
+        naziv,
+        datum_odhoda, // "2024-10-27"
+        datum_prihoda, // "2024-10-27"
+        kilometrina,
+        lokacija,
+        opis,
+        oseba, // email referenca na userja
       };
 
       db.collection("Potni_stroski").doc(id).set(novStrosek);
