@@ -48,7 +48,7 @@ const EditExpense: React.FC = () => {
         setSuccessMessage(null);
 
         try {
-            const response = await axios.put(`http://localhost:9000/strosek/uredi/${id}`, expense);
+            const response = await axios.put(`http://localhost:9000/strosek/${id}`, expense);
             setSuccessMessage('Strošek je bil uspešno posodobljen!');
             console.log('Expense updated:', response.data);
         } catch (error) {

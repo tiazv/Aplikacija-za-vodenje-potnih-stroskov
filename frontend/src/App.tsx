@@ -13,8 +13,8 @@ function App() {
         <Routes>
           <Route path="/" element={<AllTravelExpenses />} />
           <Route path="/dodaj-strosek" element={<CreateTravelExpenses />} />
-          <Route path="/:id" element={<TravelExpense/>} />
-          <Route path="/:id" element={<EditExpense/>} />
+          <Route path="/edit/:id" element={<EditExpense/>} />
+          <Route path="/details/:id" element={<TravelExpense/>} />
         </Routes>
     </Router>
   );
