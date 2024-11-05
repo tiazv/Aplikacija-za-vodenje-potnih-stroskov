@@ -20,6 +20,7 @@ import detailsIcon from '../assets/more2.png';
 import editIcon from '../assets/edit2.png';
 import deleteIcon from '../assets/delete2.png';
 import { IExpense } from "../models/expenses";
+import {useNavigate} from "react-router-dom";
 
 const ExpenseListPage: React.FC = () => {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
@@ -28,7 +29,7 @@ const ExpenseListPage: React.FC = () => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalItems, setTotalItems] = useState<number>(0);
-
+  const navigate= useNavigate();
   useEffect(() => {
     const fetchExpenses = async () => {
       setLoading(true);
@@ -72,6 +73,13 @@ const ExpenseListPage: React.FC = () => {
     setPage(0);
   };
 
+  const handleDetail = async (id: string | null) => {
+    if (id) {
+      navigate(`/detail/${id}`);
+    } else {
+      console.error("ID ni na voljo za prikaz podrobnosti.");
+    }
+  };
   return (
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         <Typography variant="h4" align="center" gutterBottom>
@@ -107,7 +115,8 @@ const ExpenseListPage: React.FC = () => {
                       <TableCell align="center">{expense.naziv}</TableCell>
                       <TableCell align="center">{expense.oseba}</TableCell>
                       <TableCell align="center">
-                        <Button><img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
+                        <Button onClick={() => handleDetail(expense.id)}>
+                          <img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
                       </TableCell>
                       <TableCell align="center">
                         <Button>
