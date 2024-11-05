@@ -12,10 +12,7 @@ class Expense {
   ) {
     try {
       const date = new Date().toJSON();
-      const id =
-        oseba +
-        "_" +
-        date;
+      const id = oseba + "_" + date;
       const cena = kilometrina * 0.43;
       const novStrosek = {
         id: id,
@@ -147,6 +144,23 @@ class Expense {
       throw new Error(
         "Error retrieving expenses by emails with pagination: " + error.message
       );
+    }
+  }
+
+  static async getByUserEmail(email) {
+    try {
+      const stroskiRef = await db
+        .collection("Potni_stroski")
+        .where("oseba", "==", email)
+        .get();
+      const stroski = [];
+      stroskiRef.forEach((doc) => {
+        stroski.push(doc.data());
+      });
+
+      return stroski;
+    } catch (error) {
+      throw new Error(`Error retrieving expenses by email: ${error.message}`);
     }
   }
 }
