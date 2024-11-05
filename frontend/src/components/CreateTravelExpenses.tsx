@@ -133,7 +133,7 @@ const CreateExpenseComponent: React.FC = () => {
     <Container maxWidth="sm" sx={{ mt: 5 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h5" gutterBottom align="center">
-          Dodaj nov strošek
+          Dodaj nov potni strošek
         </Typography>
 
         {successMessage && (
