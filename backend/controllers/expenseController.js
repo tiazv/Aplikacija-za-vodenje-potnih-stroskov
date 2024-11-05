@@ -61,7 +61,7 @@ async function vsiStroski(req, res) {
       if (!year || !month) {
         return res
           .status(400)
-          .json({ error: "Parameter 'month' mora biti v formatu 'YYYY-MM'." });
+          .json({ error: "Parameter 'monthFilter' mora biti v formatu 'YYYY-MM'." });
       }
       stroski = await Expense.getByMonth(year, month, limitValue, offsetValue);
     } else {
