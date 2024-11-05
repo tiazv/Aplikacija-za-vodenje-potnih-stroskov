@@ -3,8 +3,8 @@ const db = require("../db");
 class Expense {
   static async add(
     naziv,
-    datum_odhoda,
-    datum_prihoda,
+    datum_odhoda, // "2024-10-27"
+    datum_prihoda, // "2024-10-28"
     kilometrina,
     lokacija,
     opis,
@@ -17,13 +17,13 @@ class Expense {
       const novStrosek = {
         id: id,
         naziv: naziv,
-        datum_odhoda: datum_odhoda, // "2024-10-27"
-        datum_prihoda: datum_prihoda, // "2024-10-27"
-        kilometrina: kilometrina,
+        datum_odhoda: datum_odhoda,
+        datum_prihoda: datum_prihoda,
+        kilometrina: parseFloat(kilometrina),
         lokacija: lokacija,
         opis: opis,
         oseba: oseba, // email referenca na userja
-        cena: cena.toFixed(2),
+        cena: parseFloat(cena.toFixed(2)),
       };
 
       db.collection("Potni_stroski").doc(id).set(novStrosek);
@@ -162,6 +162,25 @@ class Expense {
     } catch (error) {
       throw new Error(`Error retrieving expenses by email: ${error.message}`);
     }
+  }
+
+  static async getByMonth(year, month, limit, offset) {
+    const startOfMonth = new Date(year, month - 1, 1);
+    const endOfMonth = new Date(year, month, 0);
+
+    const snapshot = await db
+      .collection("Potni_stroski")
+      .limit(limit)
+      .offset(offset)
+      .get();
+    const expenses = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((expense) => {
+        const departureDate = new Date(expense.datum_odhoda);
+        return departureDate >= startOfMonth && departureDate <= endOfMonth;
+      });
+
+    return expenses;
   }
 }
 
