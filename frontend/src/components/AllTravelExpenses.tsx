@@ -20,6 +20,7 @@ import detailsIcon from '../assets/more2.png';
 import editIcon from '../assets/edit2.png';
 import deleteIcon from '../assets/delete2.png';
 import { IExpense } from "../models/expenses";
+import {useNavigate} from "react-router-dom";
 
 const ExpenseListPage: React.FC = () => {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
@@ -28,6 +29,7 @@ const ExpenseListPage: React.FC = () => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const navigate= useNavigate();
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -72,6 +74,10 @@ const ExpenseListPage: React.FC = () => {
     setPage(0);
   };
 
+  const handleEdit = (id: string) => {
+    navigate(`/edit/${id}`); // Navigate to the expense details page
+  };
+
   return (
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         <Typography variant="h4" align="center" gutterBottom>
@@ -110,7 +116,7 @@ const ExpenseListPage: React.FC = () => {
                         <Button><img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Button>
+                        <Button onClick={() => handleEdit(expense.id)}>
                         <img src={editIcon} alt="Edit" width="24" height="24" />
                         </Button>
                       </TableCell>
