@@ -49,12 +49,24 @@ async function dodajStrosek(req, res) {
 }
 
 async function vsiStroski(req, res) {
-  const { page, limit } = req.query;
-  const limitValue = parseInt(limit);
-  const offsetValue = (parseInt(page) - 1) * limitValue;
+  const { page, limit, monthFilter } = req.query;
+  // month je v obliki 2024-11
+  const limitValue = parseInt(limit) || 10;
+  const offsetValue = (parseInt(page) - 1) * limitValue || 0;
 
   try {
-    const stroski = await Expense.getAll(limitValue, offsetValue);
+    let stroski;
+    if (monthFilter) {
+      const [year, month] = monthFilter.split("-");
+      if (!year || !month) {
+        return res
+          .status(400)
+          .json({ error: "Parameter 'month' mora biti v formatu 'YYYY-MM'." });
+      }
+      stroski = await Expense.getByMonth(year, month, limitValue, offsetValue);
+    } else {
+      stroski = await Expense.getAll(limitValue, offsetValue);
+    }
 
     const stroskiZOsebami = await Promise.all(
       stroski.map(async (strosek) => {
