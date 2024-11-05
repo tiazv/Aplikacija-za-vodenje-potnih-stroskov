@@ -75,7 +75,7 @@ const ExpenseListPage: React.FC = () => {
   return (
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         <Typography variant="h4" align="center" gutterBottom>
-          Traveling Expenses
+          Potni stroški službenih poti
         </Typography>
     
         {loading ? (

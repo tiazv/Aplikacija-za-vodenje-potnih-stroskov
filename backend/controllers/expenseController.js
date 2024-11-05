@@ -26,6 +26,12 @@ async function dodajStrosek(req, res) {
   }
 
   try {
+    const uporabnik = await User.getByEmail(oseba);
+    if (!uporabnik) {
+      return res
+        .status(404)
+        .json({ error: "Uporabnik s tem emailom ne obstaja" });
+    }
     const novStrosek = await Expense.add(
       naziv,
       datum_odhoda,
@@ -167,6 +173,24 @@ async function stroskiPoOsebi(req, res) {
   }
 }
 
+async function vsotaStroskovPoOsebi(req, res) {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: "Parameter 'email' je obvezen." });
+  }
+
+  try {
+    const stroski = await Expense.getByUserEmail(email);
+    const vsota_stroskov = stroski.reduce((vsota, strosek) => {
+      return vsota + (parseFloat(strosek.cena) || 0);
+    }, 0);
+    res.status(200).json({ vsota_stroskov });
+  } catch (error) {
+    res.status(500).json({ details: error.message });
+  }
+}
+
 module.exports = {
   dodajStrosek,
   vsiStroski,
@@ -174,4 +198,5 @@ module.exports = {
   spremeniStrosek,
   izbrisiStrosek,
   stroskiPoOsebi,
+  vsotaStroskovPoOsebi,
 };
