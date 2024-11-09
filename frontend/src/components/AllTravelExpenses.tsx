@@ -15,6 +15,7 @@ import {
   TablePagination,
   IconButton,
   Box,
+  TextField
 } from '@mui/material';
 import detailsIcon from '../assets/more2.png';
 import editIcon from '../assets/edit2.png';
@@ -28,17 +29,21 @@ const ExpenseListPage: React.FC = () => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [monthFilter, setMonthFilter] = useState<string>("");
+
 
   useEffect(() => {
     const fetchExpenses = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(
-          `http://localhost:9000/strosek/vsi?page=${
-            page + 1
-          }&limit=${rowsPerPage}`
-        );
+        const response = await axios.get(`http://localhost:9000/strosek/vsi`, {
+          params: {
+            page: page + 1,
+            limit: rowsPerPage,
+            monthFilter: monthFilter || undefined, 
+          },
+        });
         setExpenses(response.data.data);
         setTotalItems(response.data.totalItems);
       } catch (error) {
@@ -50,7 +55,7 @@ const ExpenseListPage: React.FC = () => {
     };
 
     fetchExpenses();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, monthFilter]);
 
   const handleDelete = async (id: string) => {
     try {
@@ -72,11 +77,32 @@ const ExpenseListPage: React.FC = () => {
     setPage(0);
   };
 
+  const handleMonthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMonthFilter(event.target.value);
+    setPage(0); 
+  };
+
   return (
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         <Typography variant="h4" align="center" gutterBottom>
           Potni stroški službenih poti
         </Typography>
+        <Box display="flex" justifyContent="center" mb={3}>
+          <TextField
+            label="Filter by Month"
+            type="month"
+            value={monthFilter}
+            onChange={handleMonthChange}
+            variant="outlined" 
+            InputLabelProps={{ shrink: true }} 
+            sx={{
+              width: "300px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px", 
+              },
+            }}
+          />
+        </Box>
     
         {loading ? (
           <Box display="flex" justifyContent="center" my={3}>
