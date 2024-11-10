@@ -21,6 +21,7 @@ import detailsIcon from '../assets/more2.png';
 import editIcon from '../assets/edit2.png';
 import deleteIcon from '../assets/delete2.png';
 import { IExpense } from "../models/expenses";
+import { Link } from 'react-router-dom';
 
 const ExpenseListPage: React.FC = () => {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
@@ -131,7 +132,12 @@ const ExpenseListPage: React.FC = () => {
                       <TableCell align="center">{expense.datum_odhoda}</TableCell>
                       <TableCell align="center">{expense.datum_prihoda}</TableCell>
                       <TableCell align="center">{expense.naziv}</TableCell>
-                      <TableCell align="center">{expense.oseba}</TableCell>
+                      <TableCell align="center">
+                        <Link to={`/user/${expense.oseba}/expenses`}>
+                          {expense.oseba}
+                        </Link>
+                      
+                      </TableCell>
                       <TableCell align="center">
                         <Button><img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
                       </TableCell>
