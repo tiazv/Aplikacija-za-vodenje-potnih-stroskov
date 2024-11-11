@@ -11,7 +11,7 @@ const Logout: React.FC = () => {
         const performLogout = async () => {
             try {
                 await logout();
-                navigate('/login');
+                navigate('/');
             } catch (error) {
                 console.error('Error during logout:', error);
             }
