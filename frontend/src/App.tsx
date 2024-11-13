@@ -4,6 +4,8 @@ import AllTravelExpenses from './components/AllTravelExpenses';
 import CreateTravelExpenses from './components/CreateTravelExpenses';
 import Navbar from './components/Navbar';
 import EditTravelExpense from "./components/EditTravelExpense";
+import UserExpenseOverview from './components/UserExpensesOverview';
+
 
 function App() {
   return (
@@ -12,7 +14,11 @@ function App() {
         <Routes>
           <Route path="/" element={<AllTravelExpenses />} />
           <Route path="/dodaj-strosek" element={<CreateTravelExpenses />} />
+
             <Route path="/edit/:id" element={<EditTravelExpense />} />
+
+          <Route path="/user/:email/expenses" element={<UserExpenseOverview />} />
+
         </Routes>
     </Router>
   );

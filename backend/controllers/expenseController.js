@@ -26,6 +26,12 @@ async function dodajStrosek(req, res) {
   }
 
   try {
+    const uporabnik = await User.getByEmail(oseba);
+    if (!uporabnik) {
+      return res
+        .status(404)
+        .json({ error: "Uporabnik s tem emailom ne obstaja" });
+    }
     const novStrosek = await Expense.add(
       naziv,
       datum_odhoda,
@@ -43,14 +49,27 @@ async function dodajStrosek(req, res) {
 }
 
 async function vsiStroski(req, res) {
-  const { page, limit } = req.query;
-  const limitValue = parseInt(limit);
-  const offsetValue = (parseInt(page) - 1) * limitValue;
+  const { page, limit, monthFilter } = req.query;
+  // month je v obliki 2024-11
+  const limitValue = parseInt(limit) || 10;
+  const offsetValue = (parseInt(page) - 1) * limitValue || 0;
 
   try {
-    const stroski = await Expense.getAll(limitValue, offsetValue);
+    let stroski;
+    if (monthFilter) {
+      const [year, month] = monthFilter.split("-");
+      if (!year || !month) {
+        return res
+          .status(400)
+          .json({ error: "Parameter 'monthFilter' mora biti v formatu 'YYYY-MM'." });
+      }
+      stroski = await Expense.getByMonth(year, month, limitValue, offsetValue);
+    } else {
+      stroski = await Expense.getAll(limitValue, offsetValue);
+    }
 
-    const stroskiZOsebami = await Promise.all(
+    //Zakomentirano za vsak slucaj ce se bo se uporabljalo
+    /*const stroskiZOsebami = await Promise.all(
       stroski.map(async (strosek) => {
         const { ime, priimek } = await User.getByEmail(strosek.oseba);
         strosekZOsebo = {
@@ -59,7 +78,7 @@ async function vsiStroski(req, res) {
         };
         return strosekZOsebo;
       })
-    );
+    );*/
 
     const totalItems = (await db.collection("Potni_stroski").get()).size;
 
@@ -68,7 +87,9 @@ async function vsiStroski(req, res) {
       itemsPerPage: limit,
       totalItems,
       totalPages: Math.ceil(totalItems / limitValue),
-      data: stroskiZOsebami,
+      //Enako kot zgoraj - zakomentirano za vsak slucaj + dodano data: stroski
+      //data: stroskiZOsebami,
+      data: stroski,
     });
   } catch (error) {
     res.status(500).json({ details: error.message });
@@ -167,6 +188,24 @@ async function stroskiPoOsebi(req, res) {
   }
 }
 
+async function vsotaStroskovPoOsebi(req, res) {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: "Parameter 'email' je obvezen." });
+  }
+
+  try {
+    const stroski = await Expense.getByUserEmail(email);
+    const vsota_stroskov = stroski.reduce((vsota, strosek) => {
+      return vsota + (parseFloat(strosek.cena) || 0);
+    }, 0);
+    res.status(200).json({ vsota_stroskov });
+  } catch (error) {
+    res.status(500).json({ details: error.message });
+  }
+}
+
 module.exports = {
   dodajStrosek,
   vsiStroski,
@@ -174,4 +213,5 @@ module.exports = {
   spremeniStrosek,
   izbrisiStrosek,
   stroskiPoOsebi,
+  vsotaStroskovPoOsebi,
 };
