@@ -37,9 +37,6 @@ const ExpenseListPage: React.FC = () => {
 
   const navigate= useNavigate();
 
-
-  const navigate= useNavigate();
-
   const [monthFilter, setMonthFilter] = useState<string>("");
 
 
@@ -197,4 +194,5 @@ const ExpenseListPage: React.FC = () => {
       </Container>
     );
   };
+}
 export default ExpenseListPage;
