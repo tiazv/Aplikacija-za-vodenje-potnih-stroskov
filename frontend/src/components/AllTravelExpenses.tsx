@@ -26,6 +26,7 @@ import {useNavigate} from "react-router-dom";
 import { Link } from 'react-router-dom';
 
 
+
 const ExpenseListPage: React.FC = () => {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,7 +37,11 @@ const ExpenseListPage: React.FC = () => {
 
   const navigate= useNavigate();
 
+
+  const navigate= useNavigate();
+
   const [monthFilter, setMonthFilter] = useState<string>("");
+
 
 
   useEffect(() => {
@@ -84,6 +89,15 @@ const ExpenseListPage: React.FC = () => {
     setPage(0);
   };
 
+
+  const handleDetail = async (id: string | null) => {
+    if (id) {
+      navigate(`/detail/${id}`);
+    } else {
+      console.error("ID ni na voljo za prikaz podrobnosti.");
+    }
+  };
+
   const handleEdit = (id: string) => {
     navigate(`/edit/${id}`); // Navigate to the expense details page
 
@@ -92,6 +106,7 @@ const ExpenseListPage: React.FC = () => {
     setPage(0); 
 
   };
+
 
   return (
       <Container maxWidth="lg" sx={{ mt: 5 }}>
@@ -149,7 +164,8 @@ const ExpenseListPage: React.FC = () => {
                       
                       </TableCell>
                       <TableCell align="center">
-                        <Button><img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
+                        <Button onClick={() => handleDetail(expense.id)}>
+                          <img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
                       </TableCell>
                       <TableCell align="center">
                         <Button onClick={() => handleEdit(expense.id)}>
