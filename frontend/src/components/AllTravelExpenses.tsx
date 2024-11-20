@@ -15,7 +15,7 @@ import {
   TablePagination,
   IconButton,
   Box,
-  TextField
+  TextField,
 } from '@mui/material';
 import detailsIcon from '../assets/more2.png';
 import editIcon from '../assets/edit2.png';
@@ -24,6 +24,7 @@ import { IExpense } from "../models/expenses";
 import {useNavigate} from "react-router-dom";
 
 import { Link } from 'react-router-dom';
+import { UserAuth } from "../context/AuthContext";
 
 
 
@@ -39,6 +40,7 @@ const ExpenseListPage: React.FC = () => {
 
   const [monthFilter, setMonthFilter] = useState<string>("");
 
+  const {user} = UserAuth();
 
 
   useEffect(() => {
