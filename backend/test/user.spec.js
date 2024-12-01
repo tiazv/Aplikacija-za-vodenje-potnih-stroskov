@@ -1,0 +1,76 @@
+const User = require("../models/user");
+
+jest.mock("../models/user");
+
+describe("User Controller", () => {
+  it("should add a new user", async () => {
+    const mockUser = {
+      ime: "Janez",
+      priimek: "Novak",
+      email: "janez.novak@gmail.com",
+      geslo: "geslo123",
+      tip: "delavec",
+    };
+
+    User.add.mockResolvedValue(mockUser);
+
+    const result = await User.add(mockUser);
+    expect(result).toEqual(mockUser);
+  });
+
+  it("should return all users", async () => {
+    const mockUsers = [
+      { ime: "Janez", priimek: "Novak", email: "janez.novak@gmail.com" },
+      { ime: "Miha", priimek: "Horvat", email: "miha.horvat@gmail.com" },
+    ];
+
+    User.getAll.mockResolvedValue(mockUsers);
+
+    const result = await User.getAll();
+    expect(result).toEqual(mockUsers);
+  });
+
+  it("should return a specific user", async () => {
+    const mockUser = {
+      ime: "Janez",
+      priimek: "Novak",
+      email: "janez.novak@gmail.com",
+    };
+    const email = "janez.novak@gmail.com";
+
+    User.getById.mockResolvedValue(mockUser);
+
+    const result = await User.getById(email);
+    expect(result).toEqual(mockUser);
+  });
+
+  it("should delete a user", async () => {
+    const email = "janez.novak@gmail.com";
+
+    User.delete.mockResolvedValue({
+      message: "Uporabnik je bil izbrisan",
+    });
+
+    const result = await User.delete(email);
+    expect(result.message).toBe("Uporabnik je bil izbrisan");
+  });
+
+  it("should return user by email", async () => {
+    const mockUser = { ime: "Janez", priimek: "Novak" };
+    const email = "janez.novak@gmail.com";
+
+    User.getByEmail.mockResolvedValue(mockUser);
+
+    const result = await User.getByEmail(email);
+    expect(result).toEqual(mockUser);
+  });
+
+  it("should return null if no user matches email", async () => {
+    const email = "tia.zvajker@gmail.com";
+
+    User.getByEmail.mockResolvedValue(null);
+
+    const result = await User.getByEmail(email);
+    expect(result).toBeNull();
+  });
+});
