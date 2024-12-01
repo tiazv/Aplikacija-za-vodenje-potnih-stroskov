@@ -5,11 +5,6 @@
     "test": "jest",
     "test:ci": "jest --coverage --watchAll=false"
   },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/backend/jest.setup.js"
-    ]
-  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
