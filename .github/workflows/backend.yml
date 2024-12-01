@@ -23,12 +23,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16
-
-    - name: Setup Firebase key.json  # Ustvarjanje key.json datoteke
-      run: |
-        mkdir -p backend
-        echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" | base64 --decode > backend/key.json || echo "FIREBASE_SERVICE_ACCOUNT secret is not set"
-        cat backend/key.json
       
     - name: Install dependencies  # Namestitev odvisnosti
       run: |
