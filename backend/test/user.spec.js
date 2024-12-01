@@ -6,6 +6,7 @@ jest.mock("../models/user", () => ({
     getById: jest.fn(),
     delete: jest.fn(),
     getByEmail: jest.fn(),
+    getByFullName: jest.fn(),
   }));
 
 describe("User", () => {
@@ -79,4 +80,28 @@ describe("User", () => {
     const result = await User.getByEmail(email);
     expect(result).toBeNull();
   });
+  
+  it("should return users matching full name", async () => {
+    const mockUsers = [
+      { ime: "Janez", priimek: "Novak", email: "janez.novak@gmail.com" }
+    ];
+    const ime = "Janez";
+    const priimek = "Novak";
+
+    User.getByFullName.mockResolvedValue(mockUsers);
+
+    const result = await User.getByFullName(ime, priimek);
+    expect(result).toEqual(mockUsers);
+  });
+
+  it("should return an empty array if no users match full name", async () => {
+    const ime = "Luka";
+    const priimek = "Horvat";
+
+    User.getByFullName.mockResolvedValue([]);
+
+    const result = await User.getByFullName(ime, priimek);
+    expect(result).toEqual([]);
+  });
+
 });
