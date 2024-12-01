@@ -28,10 +28,8 @@ jobs:
       run: |
         mkdir -p backend
         echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > backend/key.json
-        # Check the contents (without printing sensitive data)
         cat backend/key.json
       
-
     - name: Install dependencies  # Namestitev odvisnosti
       run: |
         cd backend
