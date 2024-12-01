@@ -15,13 +15,18 @@ import {
   TablePagination,
   IconButton,
   Box,
-  TextField
+  TextField,
 } from '@mui/material';
 import detailsIcon from '../assets/more2.png';
 import editIcon from '../assets/edit2.png';
 import deleteIcon from '../assets/delete2.png';
 import { IExpense } from "../models/expenses";
+import {useNavigate} from "react-router-dom";
+
 import { Link } from 'react-router-dom';
+import { UserAuth } from "../context/AuthContext";
+
+
 
 const ExpenseListPage: React.FC = () => {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
@@ -30,7 +35,12 @@ const ExpenseListPage: React.FC = () => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [totalItems, setTotalItems] = useState<number>(0);
+
+  const navigate= useNavigate();
+
   const [monthFilter, setMonthFilter] = useState<string>("");
+
+  const {user} = UserAuth();
 
 
   useEffect(() => {
@@ -78,10 +88,24 @@ const ExpenseListPage: React.FC = () => {
     setPage(0);
   };
 
+
+  const handleDetail = async (id: string | null) => {
+    if (id) {
+      navigate(`/detail/${id}`);
+    } else {
+      console.error("ID ni na voljo za prikaz podrobnosti.");
+    }
+  };
+
+  const handleEdit = (id: string) => {
+    navigate(`/edit/${id}`); // Navigate to the expense details page
+
   const handleMonthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMonthFilter(event.target.value);
     setPage(0); 
+
   };
+
 
   return (
       <Container maxWidth="lg" sx={{ mt: 5 }}>
@@ -139,10 +163,11 @@ const ExpenseListPage: React.FC = () => {
                       
                       </TableCell>
                       <TableCell align="center">
-                        <Button><img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
+                        <Button onClick={() => handleDetail(expense.id)}>
+                          <img src={detailsIcon} alt="Details" width="24" height="24" /></Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Button>
+                        <Button onClick={() => handleEdit(expense.id)}>
                         <img src={editIcon} alt="Edit" width="24" height="24" />
                         </Button>
                       </TableCell>
@@ -171,4 +196,5 @@ const ExpenseListPage: React.FC = () => {
       </Container>
     );
   };
+}
 export default ExpenseListPage;
