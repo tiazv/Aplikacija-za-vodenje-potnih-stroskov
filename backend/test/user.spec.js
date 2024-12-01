@@ -1,8 +1,14 @@
 const User = require("../models/user");
 
-jest.mock("../models/user");
+jest.mock("../models/user", () => ({
+    add: jest.fn(),
+    getAll: jest.fn(),
+    getById: jest.fn(),
+    delete: jest.fn(),
+    getByEmail: jest.fn(),
+  }));
 
-describe("User Controller", () => {
+describe("User", () => {
   it("should add a new user", async () => {
     const mockUser = {
       ime: "Janez",

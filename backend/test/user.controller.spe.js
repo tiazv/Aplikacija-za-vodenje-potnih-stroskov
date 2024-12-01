@@ -2,6 +2,7 @@ const UserController = require("../controllers/userController");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 
+// Mock response object
 const mockResponse = () => {
   const res = {};
   res.status = jest.fn().mockReturnThis();

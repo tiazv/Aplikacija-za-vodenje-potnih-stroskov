@@ -3,7 +3,7 @@
     "start": "node server.js",
     "devStart": "nodemon server.js",
     "test": "jest",
-    "test:ci": "jest --coverage --watchAll=false"
+    "test:ci": "jest --coverage --watchAll=false --verbose"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
