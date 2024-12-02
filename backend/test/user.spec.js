@@ -1,13 +1,14 @@
 const User = require("../models/user");
 
 jest.mock("../models/user", () => ({
-    add: jest.fn(),
-    getAll: jest.fn(),
-    getById: jest.fn(),
-    delete: jest.fn(),
-    getByEmail: jest.fn(),
-    getByFullName: jest.fn(),
-  }));
+  add: jest.fn(),
+  getAll: jest.fn(),
+  getById: jest.fn(),
+  put: jest.fn(),
+  delete: jest.fn(),
+  getByEmail: jest.fn(),
+  getByFullName: jest.fn(),
+}));
 
 describe("User", () => {
   it("should add a new user", async () => {
@@ -80,10 +81,10 @@ describe("User", () => {
     const result = await User.getByEmail(email);
     expect(result).toBeNull();
   });
-  
+
   it("should return users matching full name", async () => {
     const mockUsers = [
-      { ime: "Janez", priimek: "Novak", email: "janez.novak@gmail.com" }
+      { ime: "Janez", priimek: "Novak", email: "janez.novak@gmail.com" },
     ];
     const ime = "Janez";
     const priimek = "Novak";
@@ -103,5 +104,4 @@ describe("User", () => {
     const result = await User.getByFullName(ime, priimek);
     expect(result).toEqual([]);
   });
-
 });
