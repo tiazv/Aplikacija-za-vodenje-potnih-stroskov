@@ -21,9 +21,7 @@ import editIcon from "../assets/edit2.png";
 import deleteIcon from "../assets/delete2.png";
 import { IExpense } from "../models/expenses";
 import { useNavigate } from "react-router-dom";
-
 import { Link } from "react-router-dom";
-import { UserAuth } from "../context/AuthContext";
 
 const ExpenseListPage: React.FC = () => {
   const [expenses, setExpenses] = useState<IExpense[]>([]);
@@ -36,8 +34,6 @@ const ExpenseListPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [monthFilter, setMonthFilter] = useState<string>("");
-
-  const { user } = UserAuth();
 
   useEffect(() => {
     const fetchExpenses = async () => {
