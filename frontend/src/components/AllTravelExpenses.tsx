@@ -93,7 +93,7 @@ const ExpenseListPage: React.FC = () => {
   };
 
   const handleEdit = (id: string) => {
-    navigate(`/edit/${id}`);
+    navigate(`/edit/${id}`); // Navigate to the expense details page
   };
 
   const handleMonthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,45 +155,62 @@ const ExpenseListPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {expenses.map((expense) => (
-                  <TableRow key={expense.id} hover>
-                    <TableCell align="center">{expense.datum_odhoda}</TableCell>
-                    <TableCell align="center">
-                      {expense.datum_prihoda}
-                    </TableCell>
-                    <TableCell align="center">{expense.naziv}</TableCell>
-                    <TableCell align="center">
-                      <Link to={`/user/${expense.oseba}/expenses`}>
-                        {expense.oseba}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button onClick={() => handleDetail(expense.id)}>
-                        <img
-                          src={detailsIcon}
-                          alt="Details"
-                          width="24"
-                          height="24"
-                        />
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button onClick={() => handleEdit(expense.id)}>
-                        <img src={editIcon} alt="Edit" width="24" height="24" />
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button onClick={() => handleDelete(expense.id)}>
-                        <img
-                          src={deleteIcon}
-                          alt="Delete"
-                          width="24"
-                          height="24"
-                        />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {expenses.map((expense) =>
+                  // Check if expense.oseba exists before rendering the entire row
+                  expense.oseba ? (
+                    <TableRow key={expense.id} hover>
+                      <TableCell align="center">
+                        {expense.datum_odhoda}
+                      </TableCell>
+                      <TableCell align="center">
+                        {expense.datum_prihoda}
+                      </TableCell>
+                      <TableCell align="center">{expense.naziv}</TableCell>
+                      <TableCell align="center">
+                        <Link to={`/user/${expense.oseba}/expenses`}>
+                          {expense.oseba}
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button onClick={() => handleDetail(expense.id)}>
+                          <img
+                            src={detailsIcon}
+                            alt="Details"
+                            width="24"
+                            height="24"
+                          />
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button onClick={() => handleEdit(expense.id)}>
+                          <img
+                            src={editIcon}
+                            alt="Edit"
+                            width="24"
+                            height="24"
+                          />
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Button onClick={() => handleDelete(expense.id)}>
+                          <img
+                            src={deleteIcon}
+                            alt="Delete"
+                            width="24"
+                            height="24"
+                          />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    <TableRow key={expense.id} hover>
+                      <TableCell align="center" colSpan={7}>
+                        {" "}
+                        <span>Temu strošku ni dodeljene osebe</span>
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
               </TableBody>
             </Table>
           </TableContainer>
