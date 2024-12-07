@@ -9,6 +9,7 @@ jest.mock("../models/expense", () => ({
   getByEmails: jest.fn(),
   getByUserEmail: jest.fn(),
   getByMonth: jest.fn(),
+  getExpenseSumInDateRangeByUser: jest.fn(), 
 }));
 
 describe("Expense", () => {
@@ -137,5 +138,80 @@ describe("Expense", () => {
 
     const result = await Expense.getByMonth(year, month, 10, 0);
     expect(result).toEqual(mockExpenses);
+  });
+
+  it("should calculate the sum of expenses in a date range for a user", async () => {
+    const email = "email@gmail.com";
+    const startDate = "2024-10-01";
+    const endDate = "2024-10-31";
+
+    const mockResponse = {
+      email: "email@gmail.com",
+      total: 468.7,
+      startDate: "2024-10-01",
+      endDate: "2024-10-31",
+    };
+
+    Expense.getExpenseSumInDateRangeByUser.mockResolvedValue(mockResponse);
+
+    const result = await Expense.getExpenseSumInDateRangeByUser(
+      email,
+      startDate,
+      endDate
+    );
+
+    expect(result).toEqual(mockResponse);
+    expect(result.total).toBe(468.7);
+  });
+
+  it("should throw an error when adding an expense fails", async () => {
+    Expense.add.mockRejectedValue(new Error("Database error"));
+
+    await expect(
+      Expense.add(
+        "Failed Expense",
+        "2024-10-27",
+        "2024-10-28",
+        50,
+        "Maribor",
+        "Test",
+        "user@example.com"
+      )
+    ).rejects.toThrow("Database error");
+  });
+
+  it("should handle no expenses found for a user email", async () => {
+    const email = "unknown@example.com";
+
+    Expense.getByUserEmail.mockResolvedValue([]);
+
+    const result = await Expense.getByUserEmail(email);
+
+    expect(result).toEqual([]);
+  });
+
+  it("should throw an error when retrieving an expense by ID fails", async () => {
+    const id = "invalid_id";
+
+    Expense.getById.mockRejectedValue(new Error("Expense not found"));
+
+    await expect(Expense.getById(id)).rejects.toThrow("Expense not found");
+  });
+
+  it("should handle pagination correctly for expenses by emails", async () => {
+    const emails = ["user@example.com"];
+    const mockPaginatedResponse = {
+      stroski: [
+        { id: "user_2024-10-27T00:00:00.000Z", naziv: "Paginated Expense" },
+      ],
+      totalItems: 1,
+    };
+
+    Expense.getByEmails.mockResolvedValue(mockPaginatedResponse);
+
+    const result = await Expense.getByEmails(emails, 5, 1);
+
+    expect(result.stroski).toEqual(mockPaginatedResponse.stroski);
+    expect(result.totalItems).toBe(1);
   });
 });
