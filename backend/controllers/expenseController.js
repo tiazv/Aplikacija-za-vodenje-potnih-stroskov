@@ -59,9 +59,9 @@ async function vsiStroski(req, res) {
     if (monthFilter) {
       const [year, month] = monthFilter.split("-");
       if (!year || !month) {
-        return res
-          .status(400)
-          .json({ error: "Parameter 'monthFilter' mora biti v formatu 'YYYY-MM'." });
+        return res.status(400).json({
+          error: "Parameter 'monthFilter' mora biti v formatu 'YYYY-MM'.",
+        });
       }
       stroski = await Expense.getByMonth(year, month, limitValue, offsetValue);
     } else {
@@ -206,6 +206,34 @@ async function vsotaStroskovPoOsebi(req, res) {
   }
 }
 
+async function vsotaStroskovVObdobjuPoOsebi(req, res) {
+  const { email, startDate, endDate } = req.query;
+
+  if (!email || !startDate || !endDate) {
+    return res.status(400).json({
+      error: "Parametri 'email', 'startDate' in 'endDate' so obvezni.",
+    });
+  }
+
+  try {
+    const uporabnik = await User.getByEmail(email);
+    if (!uporabnik) {
+      return res
+        .status(404)
+        .json({ error: "Uporabnik s tem emailom ne obstaja." });
+    }
+
+    const totalData = await Expense.getExpenseSumInDateRangeByUser(
+      email,
+      startDate,
+      endDate
+    );
+    res.status(200).json(totalData);
+  } catch (error) {
+    res.status(500).json({ details: error.message });
+  }
+}
+
 module.exports = {
   dodajStrosek,
   vsiStroski,
@@ -214,4 +242,5 @@ module.exports = {
   izbrisiStrosek,
   stroskiPoOsebi,
   vsotaStroskovPoOsebi,
+  vsotaStroskovVObdobjuPoOsebi,
 };
