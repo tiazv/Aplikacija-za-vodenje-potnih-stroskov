@@ -9,7 +9,8 @@ jest.mock("../models/expense", () => ({
   getByEmails: jest.fn(),
   getByUserEmail: jest.fn(),
   getByMonth: jest.fn(),
-  getExpenseSumInDateRangeByUser: jest.fn(), 
+  getExpenseSumInDateRangeByUser: jest.fn(),
+  getKilometrinaSumByUser: jest.fn(),
 }));
 
 describe("Expense", () => {
@@ -140,6 +141,7 @@ describe("Expense", () => {
     expect(result).toEqual(mockExpenses);
   });
 
+  // 3. naloga
   it("should calculate the sum of expenses in a date range for a user", async () => {
     const email = "email@gmail.com";
     const startDate = "2024-10-01";
@@ -213,5 +215,62 @@ describe("Expense", () => {
 
     expect(result.stroski).toEqual(mockPaginatedResponse.stroski);
     expect(result.totalItems).toBe(1);
+  });
+
+  // 4. naloga
+  it("should calculate total kilometrina by user email", async () => {
+    const email = "janez@gmail.com";
+    const mockResponse = { email, totalKilometrina: 150.0 };
+
+    Expense.getKilometrinaSumByUser.mockResolvedValue(mockResponse);
+
+    const result = await Expense.getKilometrinaSumByUser(email);
+    expect(result).toEqual(mockResponse);
+    expect(result.totalKilometrina).toBe(150.0);
+  });
+
+  it("should return an empty array when no expenses are found for a given month", async () => {
+    const year = 2024;
+    const month = 12;
+
+    Expense.getByMonth.mockResolvedValue([]);
+
+    const result = await Expense.getByMonth(year, month, 10, 0);
+    expect(result).toEqual([]);
+  });
+
+  it("should throw an error when deleting a non-existing expense", async () => {
+    const id = "non_existing_id";
+
+    Expense.delete.mockRejectedValue(new Error("Strosek ne obstaja"));
+
+    await expect(Expense.delete(id)).rejects.toThrow("Strosek ne obstaja");
+  });
+
+  it("should return an error when updating a non-existing expense", async () => {
+    const id = "invalid_id";
+    const updatedData = { naziv: "Updated naziv" };
+
+    Expense.put.mockRejectedValue(new Error("Potni strošek ne obstaja"));
+
+    await expect(Expense.put(id, updatedData)).rejects.toThrow(
+      "Potni strošek ne obstaja"
+    );
+  });
+
+  it("should correctly filter expenses by date range and user", async () => {
+    const email = "janez@gmail.com";
+    const startDate = "2024-10-01";
+    const endDate = "2024-10-31";
+
+    const mockExpenses = [
+      { id: "1", naziv: "Expense 1", datum_odhoda: "2024-10-10" },
+      { id: "2", naziv: "Expense 2", datum_odhoda: "2024-10-20" },
+    ];
+
+    Expense.getByMonth.mockResolvedValue(mockExpenses);
+
+    const result = await Expense.getByMonth(2024, 10, 10, 0);
+    expect(result).toEqual(mockExpenses);
   });
 });
