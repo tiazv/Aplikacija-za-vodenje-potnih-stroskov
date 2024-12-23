@@ -22,7 +22,7 @@ async function dodajStrosek(req, res) {
     !opis ||
     !oseba
   ) {
-    return res.status(400).json({ error: "Vsa polja morajo biti izpolnjena" });
+    return res.status(400).json({ error: "Vsa polja morajo biti izpolnjena!" });
   }
 
   try {
