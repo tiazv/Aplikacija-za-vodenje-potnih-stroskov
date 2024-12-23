@@ -112,27 +112,3 @@ jobs:
       run: |
         docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}        
-
-  # Deploy backend to Firebase Functions
-  deploy-backend-to-firebase:
-    needs: test-backend  # This depends on the test stage for your backend
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install Firebase CLI
-        run: |
-          cd backend  # Navigate to the backend folder
-          npm install -g firebase-tools
-
-      - name: Install dependencies for backend
-        run: |
-          cd backend
-          npm install
-
-      - name: Deploy to Firebase Functions
-        run: |
-          cd backend
-          firebase deploy --only functions --token ${{ secrets.FIREBASE_TOKEN }}
