@@ -183,33 +183,24 @@ class Expense {
     return expenses;
   }
 
-  static async getExpenseSumInDateRangeByUser(email, startDate, endDate) {
+  static async getKilometrinaSumByUser(email) {
     try {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-
       const snapshot = await db
         .collection("Potni_stroski")
         .where("oseba", "==", email)
         .get();
 
-      const total = snapshot.docs
+      const totalKilometrina = snapshot.docs
         .map((doc) => doc.data())
-        .filter((expense) => {
-          const expenseDate = new Date(expense.datum_odhoda);
-          return expenseDate >= start && expenseDate <= end;
-        })
-        .reduce((sum, expense) => sum + (expense.cena || 0), 0);
+        .reduce((sum, expense) => sum + (expense.kilometrina || 0), 0);
 
       return {
         email,
-        total: parseFloat(total.toFixed(2)),
-        startDate: start.toISOString().split("T")[0],
-        endDate: end.toISOString().split("T")[0],
+        totalKilometrina: parseFloat(totalKilometrina),
       };
     } catch (error) {
       throw new Error(
-        `Error calculating total expenses for user ${email}: ${error.message}`
+        `Error calculating total kilometrina for user ${email}: ${error.message}`
       );
     }
   }

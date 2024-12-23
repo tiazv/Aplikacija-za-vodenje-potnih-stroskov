@@ -234,6 +234,24 @@ async function vsotaStroskovVObdobjuPoOsebi(req, res) {
   }
 }
 
+async function pridobiVsotoKilometrinePoOsebi(req, res) {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: "Parameter 'email' je obvezen." });
+  }
+
+  try {
+    const totalKilometrina = await Expense.getKilometrinaSumByUser(email);
+    res.status(200).json(totalKilometrina);
+  } catch (error) {
+    res.status(500).json({
+      details: `Error calculating total kilometrina for user ${email}: ${error.message}`,
+    });
+  }
+}
+
+
 module.exports = {
   dodajStrosek,
   vsiStroski,
@@ -243,4 +261,5 @@ module.exports = {
   stroskiPoOsebi,
   vsotaStroskovPoOsebi,
   vsotaStroskovVObdobjuPoOsebi,
+  pridobiVsotoKilometrinePoOsebi
 };
