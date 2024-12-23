@@ -10,3 +10,6 @@ Aplikacija za vodenje potnih stroškov ponuja funkcionalnosti za učinkovito upr
 Aplikacija vključuje tudi *seznam vseh stroškov*, kjer lahko uporabniki kliknejo posamezen strošek za ogled podrobnosti, kot so opis, vsota stroška in kilometrina. Poleg tega lahko uporabnik klikne na ime osebe, povezane s stroškom, kar omogoča prikaz vsote vseh stroškov te osebe, kar olajša sledenje celotnim stroškom.
 
 Za boljšo preglednost potnih stroškov, aplikacija omogoča *filtriranje stroškov po mesecih in letih*, kar poenostavi analizo in iskanje določenih stroškov v določenem časovnem obdobju.
+
+https://vodenjepotnihstroskov-e3174.web.app/
+https://backend-aplikacija-za-vodenje-potnih-stroskov-4tbnhhztp.vercel.app/
